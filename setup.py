@@ -15,7 +15,7 @@ setup(name="bpsupport",
 		],
 		entry_points={
 				'console_scripts': [
-						'out_to_csv = albionsupport.cmd.out_to_csv:main',
+						'out_to_csv = bpsupport.cmd.out_to_csv:main',
 				],
 		},
 		classifiers=[
