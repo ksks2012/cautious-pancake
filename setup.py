@@ -11,7 +11,7 @@ setup(name="bpsupport",
 		install_requires=[
 			"PyYaml >= 6.0",
             "requests >= 2.21.0",
-            "beautifulsoup >= 4 4.12.2"
+            "beautifulsoup4 >= 4.12.2"
 		],
 		entry_points={
 				'console_scripts': [
