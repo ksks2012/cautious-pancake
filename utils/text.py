@@ -1,0 +1,13 @@
+STARTING = "先發"
+BENCH = "替補"
+
+# Scored
+SHOT = "投籃"
+DUNK = "灌籃"
+FAST_BREAK = "快攻:"
+THREE_POINT_SHOT = "三分"
+OTHER_COURT = "遠射"
+SCORED_LIST = [SHOT, DUNK, FAST_BREAK, THREE_POINT_SHOT, OTHER_COURT]
+
+CLOSE_RANGE = "近距離"
+MID_RANGE = "中距離"

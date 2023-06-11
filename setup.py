@@ -6,7 +6,7 @@ from setuptools import find_packages
 
 setup(name="bpsupport",
 		version="0.0.1",
-		description="An simple program for support bp",
+		description="A simple program for support bp",
 		packages=find_packages(),
 		install_requires=[
 			"PyYaml >= 6.0",
