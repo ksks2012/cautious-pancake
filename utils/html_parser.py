@@ -35,8 +35,11 @@ def analysis_control(rows: List[str]):
                         midrange_shooting += 1
                     if any(x in control[0] for x in [TEXT.THREE_POINT_SHOT, TEXT.OTHER_COURT]):
                         three_shooting += 1
-                    if TEXT.CLOSE_RANGE in control[0] or TEXT.DUNK in control[0] or "快攻:" in control[0]:
+                    if any(x in control[0] for x in [TEXT.CLOSE_RANGE, TEXT.DUNK]):
                         inside_shooting += 1
+                    if any(x in control[0] for x in TEXT.FAST_BREAK_LIST):
+                        fast_break += 1
+
                     shot = control[1].split('(')
                     print(shot)
                     if len(shot) == 2:
@@ -61,6 +64,7 @@ def analysis_control(rows: List[str]):
 
     print(f'{shot_count=}')
 
+    print(f'{fast_break=}')
     print(f'{inside_shooting=}')
     print(f'{midrange_shooting=}')
     print(f'{three_shooting=}')
