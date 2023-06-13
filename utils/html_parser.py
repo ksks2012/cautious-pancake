@@ -6,7 +6,17 @@ from typing import List
 import utils.text as TEXT
 
 INPUT = "./var/17617111"
-SHOT_QUALITY = ['chance', 'skill_rate', 'qaulity_rate', 'defender']
+
+def analysis_shots(player: dict) -> dict:
+    shots = {}
+    for name, shots in player:
+        # chance
+        # defender
+        # qaulity_rate
+        # skill_rate
+        pass
+
+    pass
 
 def analysis_control(rows: List[str]):
     players = {}
@@ -18,6 +28,7 @@ def analysis_control(rows: List[str]):
     three_shooting = 0
     fast_break = 0
 
+    # TODO: scored
     for row in rows:
         if len(row) == 5:
             # print(row[4])
@@ -30,15 +41,20 @@ def analysis_control(rows: List[str]):
                     if players.get(player_name) is None:
                         players[player_name] = {}
                 
-                if any(x in control[0] for x in TEXT.SCORED_LIST):                    
+                if any(x in control[0] for x in TEXT.SCORED_LIST):
+                    shot_class = ""                    
                     if TEXT.MID_RANGE in control[0]:
                         midrange_shooting += 1
+                        shot_class = "midrange_shooting"
                     if any(x in control[0] for x in [TEXT.THREE_POINT_SHOT, TEXT.OTHER_COURT]):
                         three_shooting += 1
+                        shot_class = "three_shooting"
                     if any(x in control[0] for x in [TEXT.CLOSE_RANGE, TEXT.DUNK]):
                         inside_shooting += 1
+                        shot_class = "inside_shooting"
                     if any(x in control[0] for x in TEXT.FAST_BREAK_LIST):
                         fast_break += 1
+                        shot_class = "fast_break"
 
                     shot = control[1].split('(')
                     print(shot)
@@ -46,15 +62,20 @@ def analysis_control(rows: List[str]):
                         shot_count += 1
                         quality = shot[1].replace('\'', '').replace(')', '').split(',')
                         print(quality)
-                        for idx, q in enumerate(SHOT_QUALITY):
+                        if players[shot[0]].get("shot_class") == None:
+                            players[shot[0]]["shot_class"] = []
+                        players[shot[0]]["shot_class"].append(shot_class)
+                        for idx, q in enumerate(TEXT.SHOT_QUALITY):
                             if players[shot[0]].get(q) == None:
-                                print(players[shot[0]])
                                 players[shot[0]][q] = []
                             players[shot[0]][q].append(quality[idx])
 
     print("~~~~~~~~~~~~~~")
     pprint.pprint(players)
     print(f'{len(players)=}')
+
+    # analysis_shots(players)
+
     check_shot_count = 0
     for _, v in players.items():
         # print(v)

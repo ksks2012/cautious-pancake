@@ -13,3 +13,6 @@ SCORED_LIST = [SHOT, DUNK, SUCCESS_FAST_BREAK, FAIL_FAST_BREAK, THREE_POINT_SHOT
 
 CLOSE_RANGE = "近距離"
 MID_RANGE = "中距離"
+
+# title
+SHOT_QUALITY = ['chance', 'skill_rate', 'qaulity_rate', 'defender']
