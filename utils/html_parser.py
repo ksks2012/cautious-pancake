@@ -64,6 +64,8 @@ def analysis_control(rows: List[str]):
                         print(quality)
                         if players[shot[0]].get("shot_class") == None:
                             players[shot[0]]["shot_class"] = []
+                            players[shot[0]]["teams"] = row[2]
+                            
                         players[shot[0]]["shot_class"].append(shot_class)
                         for idx, q in enumerate(TEXT.SHOT_QUALITY):
                             if players[shot[0]].get(q) == None:
