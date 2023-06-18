@@ -1,6 +1,9 @@
-# Introduction
+# bp support
 
-For analysis of bp
+Tags: Home
+
+# 目錄
+
 # 功能
 
 ## 比賽分析
@@ -8,8 +11,14 @@ For analysis of bp
 ### Think
 
 - 投籃品質
+    - 奇蹟
+    - 運氣不好
 - 出手占比
 - 計算進階數據
+- 花費時間 (Pace)
+    - 傳球
+    - 進攻意識
+    - 出手選擇
 
 ### 項目
 
@@ -26,3 +35,13 @@ For analysis of bp
     - 主場
 - 傳球
 - 防守
+
+# struct
+
+- player
+    - chance
+    - defender
+    - qaulity_rate
+    - shot_class
+    - skill_rate
+    - teams
