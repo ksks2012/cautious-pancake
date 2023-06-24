@@ -5,11 +5,25 @@ from typing import List
 
 import utils.text as TEXT
 
+from utils import file_processor
+
 INPUT = "./var/17617111"
 
 def analysis_shots(player: dict) -> dict:
-    shots = {}
+    return
+    player_shots = {}
     for name, shots in player:
+        if player_shots.get(name) is None:
+            player_shots[name] = {
+                'inside_shooting': [],
+                'midrange_shooting': [],
+                'three_shooting': [],
+                'fast_break': [],
+            }
+            for i, shot_class in enumerate(shots['shot_class']):
+                player_shots[shot_class]
+
+
         # chance
         # defender
         # qaulity_rate
@@ -28,7 +42,7 @@ def analysis_control(rows: List[str]):
     three_shooting = 0
     fast_break = 0
 
-    # TODO: scored
+    # TODO: scored, player position
     for row in rows:
         if len(row) == 5:
             # print(row[4])
@@ -75,6 +89,10 @@ def analysis_control(rows: List[str]):
     print("~~~~~~~~~~~~~~")
     pprint.pprint(players)
     print(f'{len(players)=}')
+
+    # TODO: save to sqlite database
+    # save players to json file
+    file_processor.write_json(f"{INPUT}_player.json", players)
 
     # analysis_shots(players)
 
@@ -128,8 +146,10 @@ def main():
     # with open(f"{INPUT}_table.json", "r", encoding="utf8") as fr:
     #     rows = json.load(fr)
 
-    rows = list_game_table()
-    analysis_control(rows)
+    # rows = list_game_table()
+    # analysis_control(rows)
+    player_data = file_processor.read_json(f"{INPUT}_player.json")
+    analysis_shots(player_data)
 
 if __name__ == '__main__':
     main()
