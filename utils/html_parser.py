@@ -10,27 +10,43 @@ from utils import file_processor
 INPUT = "./var/17617111"
 
 def analysis_shots(player: dict) -> dict:
-    return
     player_shots = {}
-    for name, shots in player:
+    for name, shots in player.items():
+        if len(shots) == 0:
+            continue
         if player_shots.get(name) is None:
             player_shots[name] = {
-                'inside_shooting': [],
-                'midrange_shooting': [],
-                'three_shooting': [],
-                'fast_break': [],
+                    'inside_shooting': {
+                    'chance': [],
+                    'defender': [],
+                    'qaulity_rate': [],
+                    'skill_rate': [],
+                },
+                'midrange_shooting': {
+                    'chance': [],
+                    'defender': [],
+                    'qaulity_rate': [],
+                    'skill_rate': [],
+                },
+                'three_shooting': {
+                    'chance': [],
+                    'defender': [],
+                    'qaulity_rate': [],
+                    'skill_rate': [],
+                },
+                'fast_break': {
+                    'chance': [],
+                    'defender': [],
+                    'qaulity_rate': [],
+                    'skill_rate': [],
+                },
+                'teams': shots.get('teams', ""),
             }
-            for i, shot_class in enumerate(shots['shot_class']):
-                player_shots[shot_class]
-
-
-        # chance
-        # defender
-        # qaulity_rate
-        # skill_rate
-        pass
-
-    pass
+            pprint.pprint(shots)
+            for i, shot_class in enumerate(shots.get('shot_class', [])):
+                for k in TEXT.SHOT_QUALITY:
+                    player_shots[name][shot_class][k].append(shots[k][i])
+    pprint.pprint(player_shots)
 
 def analysis_control(rows: List[str]):
     players = {}
