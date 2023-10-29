@@ -5,9 +5,10 @@ from typing import List
 
 import utils.text as TEXT
 
+from db_routine.sqlite import SqliteInstance
 from utils import file_processor
 
-INPUT = "./var/17617111"
+INPUT = "./var/18163227"
 
 def analysis_shots(player: dict) -> dict:
     player_shots = {}
@@ -48,7 +49,7 @@ def analysis_shots(player: dict) -> dict:
                     player_shots[name][shot_class][k].append(shots[k][i])
     pprint.pprint(player_shots)
 
-def analysis_control(rows: List[str]):
+def analysis_control(rows: List[str], ids: List[str]):
     players = {}
     shot_count = 0
     analysis = 0
@@ -59,7 +60,18 @@ def analysis_control(rows: List[str]):
     fast_break = 0
 
     # TODO: scored, player position
+    ids_idx = 0
+    checker = {}
     for row in rows:
+        team_id = "0"
+        player_id = "0"
+        defender_id = "0"
+        try:
+            team_id = ids[ids_idx][0]
+            player_id = ids[ids_idx][1]
+            defender_id = ids[ids_idx][2]
+        except:
+            pass
         if len(row) == 5:
             # print(row[4])
             control = row[4].replace(' ', '')
@@ -95,12 +107,20 @@ def analysis_control(rows: List[str]):
                         if players[shot[0]].get("shot_class") == None:
                             players[shot[0]]["shot_class"] = []
                             players[shot[0]]["teams"] = row[2]
+                            players[shot[0]]["team_id"] = team_id
+                            players[shot[0]]["player_id"] = player_id
                             
                         players[shot[0]]["shot_class"].append(shot_class)
                         for idx, q in enumerate(TEXT.SHOT_QUALITY):
                             if players[shot[0]].get(q) == None:
                                 players[shot[0]][q] = []
                             players[shot[0]][q].append(quality[idx])
+
+                        if players[shot[0]].get('defender_id') == None:
+                                players[shot[0]]['defender_id'] = []
+                        players[shot[0]]['defender_id'].append(defender_id)
+
+        ids_idx += 1
 
     print("~~~~~~~~~~~~~~")
     pprint.pprint(players)
@@ -126,7 +146,7 @@ def analysis_control(rows: List[str]):
     print(f'{midrange_shooting=}')
     print(f'{three_shooting=}')
 
-def list_game_table() -> List:
+def list_game_table() -> (List, List):
     with open(f"{INPUT}.html", "rb") as fr:
         response = fr.read()
         
@@ -141,31 +161,36 @@ def list_game_table() -> List:
     # print(table, len(table), type(table))
 
     columns = [th.text.replace('\n', '') for th in table.find_all('th')]
-    print(columns)
+    # print(columns)
 
     trs = table.find_all('tr')[1:]
     rows = list()
+    ids = list()
     for tr in trs:
+        ids.append([a.get('href', "").split('/')[-2] for a in tr.find_all('a')])
         rows.append([td.text.replace('\n', '').replace('\r', '') for td in tr.find_all('td')])
-    pprint.pprint(rows)
+    # pprint.pprint(rows)
+    pprint.pprint(ids)
 
-    with open(f"{INPUT}_table.json", "w", encoding="utf8") as fw:
-        jsonString = json.dumps(rows, ensure_ascii=False)
-        fw.writelines(jsonString) 
+    file_processor.write_json(f"{INPUT}_table.json", rows)
+    file_processor.write_json(f"{INPUT}_ids.json", ids)
 
-    analysis_control(rows)
-
-    return rows
+    return rows, ids
 
 
 def main():
     # with open(f"{INPUT}_table.json", "r", encoding="utf8") as fr:
     #     rows = json.load(fr)
 
-    # rows = list_game_table()
-    # analysis_control(rows)
+    # rows, ids = list_game_table()
+    # analysis_control(rows, ids)
     player_data = file_processor.read_json(f"{INPUT}_player.json")
     analysis_shots(player_data)
+
+    # Save to DB
+    # sqlite_instance = SqliteInstance()
+    # sqlite_instance.connection(TEXT.DB_PATH)
+    
 
 if __name__ == '__main__':
     main()
