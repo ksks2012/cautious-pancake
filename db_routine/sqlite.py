@@ -4,6 +4,8 @@ import os
 import sqlite3
 from typing import List, Tuple
 
+from db_routine.tables import Tables
+
 class SqliteInstance():
     def __init__(self) -> None:
         self.connection = None
@@ -93,7 +95,31 @@ class SqliteInstance():
             result.append(i[0])
 
         return result
+    
+    def insert_data(self, table_name: str, player_shooting_data: List):
+        insert_cmd = self.trans_idx_sql_cmd(table_name)
+        self.run_sql_cmd_arg(insert_cmd, player_shooting_data)
+    
+    def gen_idx_sql_col_cmd(self, table_name) -> (str, str):
+        col_cmd = ""
+        val_cmd = ""
+        table_cols = getattr(Tables, table_name)
+        size = len(table_cols)
+        for i in range(size):
+            col_cmd += f"{table_cols[i]}"
+            val_cmd += "?"
+            if i != size - 1:
+                col_cmd += ", "
+                val_cmd += ", "
 
+        return col_cmd, val_cmd
+
+    def trans_idx_sql_cmd(self, table_name: str):
+        # insert data from input.screen
+        col_cmd, val_cmd = self.gen_idx_sql_col_cmd(table_name)
+        sql_cmd = f"INSERT INTO {table_name} ({col_cmd}) VALUES ({val_cmd})"
+        return sql_cmd
+    
     def select_player_by_id(self, player_id: str) -> tuple:
-        sql_cmd = f"SELECT * FROM HorseData WHERE player_id = {int(player_id)}"
+        sql_cmd = f"SELECT * FROM ShootData WHERE player_id = {int(player_id)}"
         return self.search_player(sql_cmd)
