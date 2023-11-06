@@ -1,3 +1,7 @@
+# 
+DB_PATH = "./var/db/db.sqlite"
+
+################################
 STARTING = "先發"
 BENCH = "替補"
 
