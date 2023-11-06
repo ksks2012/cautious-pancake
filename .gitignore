@@ -15,7 +15,7 @@ rt-sandbox/**
 .rt-deps/**
 *.egg-info/**
 dist/**
-test_code/**
+# test_code/**
 .style.yapf
 
 .credentials/**
@@ -23,6 +23,7 @@ test_code/**
 *.log
 *.txt
 *.db3
+*.sqlite
 *.sh
 *.json
 *.html
