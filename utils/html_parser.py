@@ -9,10 +9,19 @@ from data_processor.sequence import player_shooting_data_to_raw
 from db_routine.sqlite import SqliteInstance
 from utils import file_processor
 
-TEST_GAME_ID = "18163227"
+TEST_GAME_ID = "18231147"
 INPUT = f"./var/{TEST_GAME_ID}"
 
 def analysis_shots(player: dict) -> dict:
+    """
+    Analyzes shooting data for each player and organizes it into a structured dictionary.
+
+    Args:
+    - player (dict): A dictionary containing shooting data for each player.
+
+    Returns:
+    - dict: Organized shooting data for each player.
+    """
     player_shoots = {}
     for name, shoots in player.items():
         if len(shoots) == 0:
@@ -53,6 +62,16 @@ def analysis_shots(player: dict) -> dict:
     return player_shoots
 
 def analysis_control(rows: List[str], ids: List[str]) -> dict:
+    """
+    Analyzes control data for each player during the game.
+
+    Args:
+    - rows (List[str]): List of strings representing rows of game data.
+    - ids (List[str]): List of strings representing player IDs.
+
+    Returns:
+    - dict: Organized control data for each player.
+    """
     players = {}
     shot_count = 0
     analysis = 0
@@ -149,6 +168,13 @@ def analysis_control(rows: List[str], ids: List[str]) -> dict:
     return players
 
 def list_game_table() -> (List, List):
+    """
+    Extracts game data from an HTML file and returns rows and player IDs.
+
+    Returns:
+    - List: Rows of game data.
+    - List: Player IDs.
+    """
     with open(f"{INPUT}.html", "rb") as fr:
         response = fr.read()
         
@@ -161,6 +187,9 @@ def list_game_table() -> (List, List):
     # <class 'bs4.element.Tag'>
     table = soup.find(["table", "td"])
     # print(table, len(table), type(table))
+    if table is None:
+        print("No table found in the HTML.")
+        return [], []
 
     columns = [th.text.replace('\n', '') for th in table.find_all('th')]
     # print(columns)
@@ -184,9 +213,9 @@ def main():
     # with open(f"{INPUT}_table.json", "r", encoding="utf8") as fr:
     #     rows = json.load(fr)
 
-    # rows, ids = list_game_table()
-    # players = analysis_control(rows, ids)
-    # file_processor.write_json(f"{INPUT}_player.json", players)
+    rows, ids = list_game_table()
+    players = analysis_control(rows, ids)
+    file_processor.write_json(f"{INPUT}_player.json", players)
     player_data = file_processor.read_json(f"{INPUT}_player.json")
     player_shoots = analysis_shots(player_data)
     file_processor.write_json(f"{INPUT}_player_shoots.json", player_shoots)
