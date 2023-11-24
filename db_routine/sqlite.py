@@ -10,6 +10,10 @@ class SqliteInstance():
     def __init__(self) -> None:
         self.connection = None
 
+    def __del__(self):
+        if self.connection:
+            self.connection.close()
+
     def connect(self, db_path):
         self.connection = sqlite3.connect(db_path)
         self.create_table()
@@ -45,10 +49,10 @@ class SqliteInstance():
         except Exception as e:
             print(f"create_talbe error: {e}")
 
-    def search_player(self, cmd: str) -> List:
+    def search_player(self, cmd: str, args: Tuple) -> List:
         try:
             cursor = self.connection.cursor()
-            cursor.execute(cmd)
+            cursor.execute(cmd, args)
             self.connection.commit()
         except:
             return []
@@ -121,5 +125,6 @@ class SqliteInstance():
         return sql_cmd
     
     def select_player_by_id(self, player_id: str) -> tuple:
-        sql_cmd = f"SELECT * FROM ShootData WHERE player_id = {int(player_id)}"
-        return self.search_player(sql_cmd)
+        sql_cmd = "SELECT * FROM ShootData WHERE player_id = ?"
+        return self.search_player(sql_cmd, (int(player_id)))
+    
