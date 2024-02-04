@@ -2,7 +2,7 @@ from operator import truediv
 import os
 
 import sqlite3
-from typing import List, Tuple
+from typing import List, Tuple, Mapping
 
 from db_routine.tables import Tables
 
@@ -41,7 +41,7 @@ class SqliteInstance():
         if self.is_table_exist("ShootData") is True:
             return
             
-        sql_cmd = "CREATE TABLE ShootData('id' INTEGER PRIMARY KEY AUTOINCREMENT, 'game_id', 'team_id', 'player_id', 'play_name', 'shot_class', 'shot_chance', 'skill_rate', 'quality_rate', 'defender_id', 'defender_name')"
+        sql_cmd = "CREATE TABLE ShootData('id' INTEGER PRIMARY KEY AUTOINCREMENT, 'game_id', 'team_id', 'team_name', 'player_id', 'player_name', 'shot_class', 'shot_chance', 'skill_rate', 'quality_rate', 'defender_id', 'defender_name')"
         try:
             cursor = self.connection.cursor()
             cursor.execute(sql_cmd)
@@ -118,7 +118,7 @@ class SqliteInstance():
 
         return col_cmd, val_cmd
 
-    def trans_idx_sql_cmd(self, table_name: str):
+    def trans_idx_sql_cmd(self, table_name: str) -> str:
         # insert data from input.screen
         col_cmd, val_cmd = self.gen_idx_sql_col_cmd(table_name)
         sql_cmd = f"INSERT INTO {table_name} ({col_cmd}) VALUES ({val_cmd})"

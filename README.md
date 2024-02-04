@@ -21,8 +21,9 @@ list_game_table() -> {INPUT}_player.json
 - id
 - game_id
 - team_id
+- team_name
 - player_id
-- play_name
+- player_name
 - shot_class
 - shot_chance
 - skill_rate
@@ -67,3 +68,8 @@ list_game_table() -> {INPUT}_player.json
     - shot_class
     - skill_rate
     - teams
+
+# TODO:
+
+- Logger
+- Hit or Miss of shootings

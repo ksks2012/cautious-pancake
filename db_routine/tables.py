@@ -1,9 +1,10 @@
 class Tables:
     ShootData = [
         'game_id', 
-        'team_id', 
+        'team_id',
+        'team_name',
         'player_id', 
-        'play_name', 
+        'player_name', 
         'shot_class', 
         'shot_chance', 
         'skill_rate', 
