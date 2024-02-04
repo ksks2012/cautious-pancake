@@ -5,12 +5,9 @@ from typing import List, Mapping
 
 import utils.text as TEXT
 
-from data_processor.sequence import player_shooting_data_to_raw
+from data_processor.sequence import player_shooting_data_to_row
 from db_routine.sqlite import SqliteInstance
 from utils import file_processor
-
-TEST_GAME_ID = "18231147"
-INPUT = f"./var/{TEST_GAME_ID}"
 
 def analysis_shots(player: dict) -> dict:
     """
@@ -31,25 +28,25 @@ def analysis_shots(player: dict) -> dict:
                     'inside_shooting': {
                     'chance': [],
                     'defender': [],
-                    'qaulity_rate': [],
+                    'quality_rate': [],
                     'skill_rate': [],
                 },
                 'midrange_shooting': {
                     'chance': [],
                     'defender': [],
-                    'qaulity_rate': [],
+                    'quality_rate': [],
                     'skill_rate': [],
                 },
                 'three_shooting': {
                     'chance': [],
                     'defender': [],
-                    'qaulity_rate': [],
+                    'quality_rate': [],
                     'skill_rate': [],
                 },
                 'fast_break': {
                     'chance': [],
                     'defender': [],
-                    'qaulity_rate': [],
+                    'quality_rate': [],
                     'skill_rate': [],
                 },
                 'teams': shoots.get('teams', ""),
@@ -95,7 +92,6 @@ def analysis_control(rows: List[str], ids: List[str]) -> dict:
         except:
             pass
         if len(row) == 5:
-            # print(row[4])
             control = row[4].replace(' ', '')
             control = control.split(':', 1)
             if len(control) == 2:
@@ -136,7 +132,12 @@ def analysis_control(rows: List[str], ids: List[str]) -> dict:
                         for idx, q in enumerate(TEXT.SHOT_QUALITY):
                             if players[shot[0]].get(q) == None:
                                 players[shot[0]][q] = []
-                            players[shot[0]][q].append(quality[idx])
+                            # Split except chance
+                            quality_split = quality[idx].split(':')
+                            if len(quality_split) == 2:
+                                players[shot[0]][q].append(quality_split[1])
+                            else:
+                                players[shot[0]][q].append(quality_split[0])
 
                         if players[shot[0]].get('defender_id') == None:
                                 players[shot[0]]['defender_id'] = []
@@ -144,14 +145,10 @@ def analysis_control(rows: List[str], ids: List[str]) -> dict:
 
         ids_idx += 1
 
+    # For checking data
     print("~~~~~~~~~~~~~~")
     pprint.pprint(players)
     print(f'{len(players)=}')
-
-    # TODO: save to sqlite database
-    # save players to json file
-
-    # analysis_shots(players)
 
     check_shot_count = 0
     for _, v in players.items():
@@ -175,7 +172,7 @@ def list_game_table() -> (List, List):
     - List: Rows of game data.
     - List: Player IDs.
     """
-    with open(f"{INPUT}.html", "rb") as fr:
+    with open(f"{TEXT.INPUT}.html", "rb") as fr:
         response = fr.read()
         
     soup = BeautifulSoup(response, "html.parser")
@@ -203,29 +200,26 @@ def list_game_table() -> (List, List):
     # pprint.pprint(rows)
     pprint.pprint(ids)
 
-    file_processor.write_json(f"{INPUT}_table.json", rows)
-    file_processor.write_json(f"{INPUT}_ids.json", ids)
+    file_processor.write_json(f"{TEXT.INPUT}_table.json", rows)
+    file_processor.write_json(f"{TEXT.INPUT}_ids.json", ids)
 
     return rows, ids
 
 
 def main():
-    # with open(f"{INPUT}_table.json", "r", encoding="utf8") as fr:
-    #     rows = json.load(fr)
-
     rows, ids = list_game_table()
     players = analysis_control(rows, ids)
-    file_processor.write_json(f"{INPUT}_player.json", players)
-    player_data = file_processor.read_json(f"{INPUT}_player.json")
+    file_processor.write_json(f"{TEXT.INPUT}_player.json", players)
+    player_data = file_processor.read_json(f"{TEXT.INPUT}_player.json")
     player_shoots = analysis_shots(player_data)
-    file_processor.write_json(f"{INPUT}_player_shoots.json", player_shoots)
+    file_processor.write_json(f"{TEXT.INPUT}_player_shoots.json", player_shoots)
 
     # Save to DB
     sqlite_instance = SqliteInstance()
     sqlite_instance.connect(TEXT.DB_PATH)
-    rows = player_shooting_data_to_raw(player_data)
-    for row in rows:
-        sqlite_instance.insert_player_shooting_data(row)
+    db_rows = player_shooting_data_to_row(players)
+    for row in db_rows:
+        sqlite_instance.insert_data("ShootData", row)
 
 if __name__ == '__main__':
     main()
