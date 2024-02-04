@@ -100,9 +100,13 @@ class SqliteInstance():
 
         return result
     
-    def insert_data(self, table_name: str, player_shooting_data: List):
+    def insert_data(self, table_name: str, player_shooting_data: Mapping):
         insert_cmd = self.trans_idx_sql_cmd(table_name)
-        self.run_sql_cmd_arg(insert_cmd, player_shooting_data)
+        table_cols = getattr(Tables, table_name)
+        row_data = []
+        for col in table_cols:
+            row_data.append(player_shooting_data.get(col, None))
+        self.run_sql_cmd_arg(insert_cmd, row_data)
     
     def gen_idx_sql_col_cmd(self, table_name) -> (str, str):
         col_cmd = ""
