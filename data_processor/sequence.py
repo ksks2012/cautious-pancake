@@ -24,7 +24,7 @@ def player_shooting_data_to_row(players: Mapping) -> List:
             tmp["shot_class"] = shot_class
             tmp["shot_chance"] = shoots["chance"][idx]
             tmp["skill_rate"] = shoots["skill_rate"][idx]
-            tmp["qaulity_rate"] = shoots["qaulity_rate"][idx]
+            tmp["quality_rate"] = shoots["quality_rate"][idx]
             tmp["defender_name"] = shoots["defender"][idx]
             tmp["defender_id"] = shoots["defender_id"][idx]
             db_rows.append(tmp)
