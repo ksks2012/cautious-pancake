@@ -1,6 +1,9 @@
 # 
 DB_PATH = "./var/db/db.sqlite"
 
+TEST_GAME_ID = "18447944"
+INPUT = f"./var/{TEST_GAME_ID}"
+
 ################################
 STARTING = "先發"
 BENCH = "替補"
@@ -19,4 +22,11 @@ CLOSE_RANGE = "近距離"
 MID_RANGE = "中距離"
 
 # title
-SHOT_QUALITY = ['chance', 'skill_rate', 'qaulity_rate', 'defender']
+SHOT_QUALITY = ['chance', 'skill_rate', 'quality_rate', 'defender']
+SHOT_CHANCE_MAPPING = {
+    "極佳機會": 5,
+    "良好機會": 4,
+    "普通機會": 3,
+    "糟糕機會": 2,
+    "極差機會": 1,
+}

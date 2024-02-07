@@ -133,7 +133,10 @@ def analysis_control(rows: List[str], ids: List[str]) -> dict:
                             if players[shot[0]].get(q) == None:
                                 players[shot[0]][q] = []
                             # Split except chance
-                            quality_split = quality[idx].split(':')
+                            if q == "chance":
+                                quality_split = [TEXT.SHOT_CHANCE_MAPPING.get(quality[idx], 0)]
+                            else:
+                                quality_split = quality[idx].split(':')
                             if len(quality_split) == 2:
                                 players[shot[0]][q].append(quality_split[1])
                             else:
