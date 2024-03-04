@@ -17,5 +17,5 @@ def test_insert_data():
     sqlite_instance.insert_data(table_name, fake_data)
 
 if __name__ == '__main__':
-    # test_trans_idx_sql_cmd()
+    test_trans_idx_sql_cmd()
     test_insert_data()
