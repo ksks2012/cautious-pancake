@@ -208,6 +208,35 @@ def list_game_table() -> (List, List):
 
     return rows, ids
 
+def table_reader(response):
+    soup = BeautifulSoup(response, "html.parser")
+    table = soup.find(["table", "td"])
+    if table is None:
+        print("No table found in the HTML.")
+        return []
+    
+    columns = [th.text.replace('\n', '') for th in table.find_all('th')]
+    # print(columns)
+
+    trs = table.find_all('tr')[1:]
+    rows = list()
+    for tr in trs:
+        rows.append([td.text.replace('\n', '').replace('\r', '') for td in tr.find_all('td')])
+
+    return rows
+
+def list_improvement_jumps() -> List:
+    with open(f"./var/{TEXT.SEASON}-IJ.html", "rb") as fr:
+        response = fr.read()
+    
+    return table_reader(response)
+
+# TODO: youth team
+def list_salary() -> List:
+    with open(f"./var/{TEXT.SEASON}-salary.html", "rb") as fr:
+        response = fr.read()
+
+    return table_reader(response)
 
 def main():
     rows, ids = list_game_table()
