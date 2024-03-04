@@ -31,3 +31,8 @@ SHOT_CHANCE_MAPPING = {
     "糟糕機會": 2,
     "極差機會": 1,
 }
+
+# salary
+MIN_GAME_PLAY = 25
+MIN_GAME_MINUTE = 15
+SALARY_WEIGHT = [0, 0, 0, 0, 18500, 12000]

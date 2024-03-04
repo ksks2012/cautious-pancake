@@ -14,6 +14,17 @@ Tags: Home
 list_game_table() -> {INPUT}_player.json
 ```
 
+- Calculate salary value
+```
+pip install .; clear; python .\data_processor\salary_value.py
+```
+
+#### Test
+
+```
+pip install .; clear; python .\test_code\test_html_parser.py
+```
+
 ### Record
 
 #### Shotting
