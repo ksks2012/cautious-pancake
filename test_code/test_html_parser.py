@@ -1,7 +1,7 @@
 import pprint
 
 from utils import file_processor
-from utils.html_parser import analysis_control, list_game_table, list_improvement_jumps
+from utils.html_parser import analysis_control, list_game_table, list_improvement_jumps, list_salary
 from utils.text import INPUT
 
 def test_analysis_control():
@@ -19,7 +19,12 @@ def test_list_improvement_jumps():
     rows = list_improvement_jumps()
     pprint.pprint(rows)
 
+def test_list_salary():
+    rows = list_salary()
+    pprint.pprint(rows)
+
 if __name__ == '__main__':
     test_list_game_table()
     test_analysis_control()
     test_list_improvement_jumps()
+    test_list_salary()
