@@ -2,6 +2,7 @@
 DB_PATH = "./var/db/db.sqlite"
 
 TEST_GAME_ID = "18447944"
+SEASON = "S98"
 INPUT = f"./var/{TEST_GAME_ID}"
 
 ################################
