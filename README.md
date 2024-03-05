@@ -20,7 +20,9 @@ pip install .; clear; python .\cmd\salary_value.py
 ```
 
 - Process draft page
+```
 pip install .; clear; python .\cmd\process_draft.py
+```
 
 #### Test
 
