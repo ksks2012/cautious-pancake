@@ -16,7 +16,7 @@ list_game_table() -> {INPUT}_player.json
 
 - Calculate salary value
 ```
-pip install .; clear; python .\data_processor\salary_value.py
+pip install .; clear; python .\cmd\salary_value.py
 ```
 
 - Process draft page
