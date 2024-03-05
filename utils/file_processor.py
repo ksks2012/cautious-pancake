@@ -1,3 +1,4 @@
+import csv
 import json
 import os
 import pprint
@@ -32,3 +33,14 @@ def write_json(filename: str, data: Mapping):
     with open(filename, "w", encoding="utf8") as fw:
         jsonString = json.dumps(data, ensure_ascii=False)
         fw.writelines(jsonString)
+
+def write_csv(filename: str, data: list):
+    with open(f'{filename}.csv', 'w', newline='', encoding="utf8") as csvfile:
+        if len(data) == 0:
+            return
+        fieldnames = data[0].keys()
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        
+        writer.writeheader()
+        for row in data:
+            writer.writerow(row)

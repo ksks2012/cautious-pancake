@@ -27,3 +27,4 @@ dist/**
 *.sh
 *.json
 *.html
+*.csv

@@ -19,6 +19,9 @@ list_game_table() -> {INPUT}_player.json
 pip install .; clear; python .\data_processor\salary_value.py
 ```
 
+- Process draft page
+pip install .; clear; python .\cmd\process_draft.py
+
 #### Test
 
 ```

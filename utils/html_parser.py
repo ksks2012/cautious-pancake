@@ -238,6 +238,39 @@ def list_salary() -> List:
 
     return table_reader(response)
 
+def list_draft() -> List:
+    with open(f"./var/{TEXT.SEASON}-3.3-draft.html", "rb") as fr:
+        response = fr.read()
+
+    soup = BeautifulSoup(response, "html.parser")
+
+    # 9 rows * 40 players
+    player_data = soup.find_all("div", {"class": "draftprospect-card__stat-data"})
+
+    # name of 40 players
+    name = soup.find_all("a", {"class": "draftprospect-card__link"})
+
+    # type of 40 players
+    player_type = soup.find_all("div", {"class": "js-prospect-card-player-type"})
+
+    player_list = []
+    for i in range(40):
+        player_row = {}
+        player_row["name"] = name[i].text
+        player_row["type"] = player_type[i].text.replace("\n", "").replace("(", "").replace(")", "")
+        player_row["position"] = player_data[i * 9].text
+        player_row["age"] = player_data[i * 9 + 1].text
+        player_row["height"] = player_data[i * 9 + 2].text
+        player_row["potential"] = player_data[i * 9 + 4].text
+        player_row["cur_ability"] = player_data[i * 9 + 5].text
+        player_row["max_ability"] = player_data[i * 9 + 6].text
+        player_row["health"] = player_data[i * 9 + 7].text
+        player_row["salary"] = player_data[i * 9 + 8].text
+
+        player_list.append(player_row)
+
+    return player_list
+
 def main():
     rows, ids = list_game_table()
     players = analysis_control(rows, ids)
