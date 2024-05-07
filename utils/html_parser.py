@@ -264,7 +264,7 @@ def list_draft() -> List:
         player_row["potential"] = player_data[i * 9 + 4].text
         player_row["cur_ability"] = player_data[i * 9 + 5].text
         player_row["max_ability"] = player_data[i * 9 + 6].text
-        player_row["health"] = player_data[i * 9 + 7].text
+        player_row["health"] = player_data[i * 9 + 7].text.replace(" ", "")
         player_row["salary"] = player_data[i * 9 + 8].text
 
         player_list.append(player_row)
