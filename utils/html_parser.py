@@ -244,30 +244,48 @@ def list_draft() -> List:
 
     soup = BeautifulSoup(response, "html.parser")
 
-    # 9 rows * 40 players
-    player_data = soup.find_all("div", {"class": "draftprospect-card__stat-data"})
+    try:
+        # ID
+        # player_id = soup.find_all("div", {"class": "draftprospect-card__flag"})
+        player_html = [i.find('a').get('href') for i in soup.find_all("div", {"class": "draftprospect-card__flag"})]
+        
+        # 9 rows * 40 players
+        player_data = soup.find_all("div", {"class": "draftprospect-card__stat-data"})
 
-    # name of 40 players
-    name = soup.find_all("a", {"class": "draftprospect-card__link"})
+        # name of 40 players
+        name = soup.find_all("a", {"class": "draftprospect-card__link"})
 
-    # type of 40 players
-    player_type = soup.find_all("div", {"class": "js-prospect-card-player-type"})
+        # type of 40 players
+        player_type = soup.find_all("div", {"class": "js-prospect-card-player-type"})
+    except:
+        print("No player found in the HTML.")
+        return []
 
     player_list = []
-    for i in range(40):
-        player_row = {}
-        player_row["name"] = name[i].text
-        player_row["type"] = player_type[i].text.replace("\n", "").replace("(", "").replace(")", "")
-        player_row["position"] = player_data[i * 9].text
-        player_row["age"] = player_data[i * 9 + 1].text
-        player_row["height"] = player_data[i * 9 + 2].text
-        player_row["potential"] = player_data[i * 9 + 4].text
-        player_row["cur_ability"] = player_data[i * 9 + 5].text
-        player_row["max_ability"] = player_data[i * 9 + 6].text
-        player_row["health"] = player_data[i * 9 + 7].text.replace(" ", "")
-        player_row["salary"] = player_data[i * 9 + 8].text
+    try:
+        for i in range(40):
+            player_row = {}
+            player_row["player_html"] = player_html[i]
+            # TODO: obtain ability of player
+            player_row["athletic_skill"] = None
+            player_row["accuracy"] = None
+            player_row["defence"] = None
+            player_row["offence"] = None
 
-        player_list.append(player_row)
+            player_row["name"] = name[i].text
+            player_row["type"] = player_type[i].text.replace("\n", "").replace("(", "").replace(")", "")
+            player_row["position"] = player_data[i * 9].text
+            player_row["age"] = player_data[i * 9 + 1].text
+            player_row["height"] = player_data[i * 9 + 2].text
+            player_row["potential"] = player_data[i * 9 + 4].text
+            player_row["cur_ability"] = player_data[i * 9 + 5].text
+            player_row["max_ability"] = player_data[i * 9 + 6].text
+            player_row["health"] = player_data[i * 9 + 7].text.replace(" ", "")
+            player_row["salary"] = player_data[i * 9 + 8].text
+
+            player_list.append(player_row)
+    except Exception as err:
+        print(err)
 
     return player_list
 
