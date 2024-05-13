@@ -6,7 +6,10 @@ Tags: Home
 
 # 功能
 
-## 比賽分析
+- game analysis
+- draft analysis
+
+## game analysis
 
 ### Command 
 
@@ -49,31 +52,49 @@ pip install .; clear; python .\test_code\test_html_parser.py
 
 ### Think
 
-- 投籃品質
-    - 奇蹟
-    - 運氣不好
-- 出手占比
-- 計算進階數據
+- 投籃品質 ()
+    - 奇蹟 (Miracle)
+    - 運氣不好 (bad luck)
+- 出手占比 (Shot ratio)
+- Calculate advanced
 - 花費時間 (Pace)
-    - 傳球
-    - 進攻意識
-    - 出手選擇
+    - 傳球 (passing)
+    - 進攻意識 (awareness)
+    - 出手選擇 (Shot selection)
 
 ### 項目
 
-- 換人
-    - 先發
-    - 替補
-- 投籃
-    - 投籃
-        - 被封蓋
-    - 出手
-    - 灌籃
-        - 必中
-    - 快攻
-    - 主場
-- 傳球
-- 防守
+- 換人 (player change)
+    - 先發 (starter)
+    - 替補 (substitute)
+- 投籃 (shooting)
+    - 投籃 (shooting)
+        - 被封蓋 (blocked)
+    - 出手 (shot)
+    - 灌籃 (dunk)
+        - 必中 (must hit)
+    - 快攻 (fast break)
+    - 主場 (home )
+- 傳球 (pass)
+- 防守 (defense)
+
+## draft analysis
+
+- name
+- type
+- position
+- age
+- height
+- potential
+- cur_ability
+- max_ability
+- health
+- salary
+- Ability
+    - Athletic skill
+    - Accuracy
+    - Defence
+    - Offence
 
 # struct
 
