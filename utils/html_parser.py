@@ -292,8 +292,8 @@ def list_draft() -> List:
 
     try:
         # ID
-        player_html = [i.find('a').get('href') for i in soup.find_all("div", {"class": "draftprospect-card__flag"})]
-        
+        player_html = [a.get('href').replace('tw', 'en') for a in soup.find_all("a", {"class": "draftprospect-card__link"})]
+
         # 9 rows * 40 players
         player_data = soup.find_all("div", {"class": "draftprospect-card__stat-data"})
 
@@ -311,7 +311,6 @@ def list_draft() -> List:
         for i in range(40):
             player_row = {}
             html_text = download_html(TEXT.BASE_URL + player_html[i])
-
             abilities = match_abilities(html_text)
             
             player_row["athletic_skill"] = abilities.get("athletic_skill")
