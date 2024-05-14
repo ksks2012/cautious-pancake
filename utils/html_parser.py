@@ -6,6 +6,7 @@ from typing import List, Mapping
 import utils.text as TEXT
 
 from data_processor.sequence import player_shooting_data_to_row
+from data_processor.html_downloader import download_html
 from db_routine.sqlite import SqliteInstance
 from utils import file_processor
 
@@ -238,13 +239,37 @@ def list_salary() -> List:
 
     return table_reader(response)
 
+def match_abilities(player_html_text: str) -> Mapping:
+    abilities = {
+        'athletic_skill': 0,
+        'accuracy': 0,
+        'defence': 0,
+        'offence': 0
+    }
+
+    soup = BeautifulSoup(player_html_text, "html.parser")
+    skill_counts = soup.find_all("span", {"class": "skill__count"})
+    print(skill_counts)
+    # for count in skill_counts:
+    #     print(count.text)
+    values = [count.text for count in skill_counts]
+    print(values)
+    try:
+        abilities['athletic_skill'] = values[1]
+        abilities['accuracy'] = values[2]
+        abilities['defence'] = values[3]
+        abilities['offence'] = values[4]
+    except:
+        print("No ability found in the HTML.")
+
+    return abilities
+
 def list_draft() -> List:
     """
     Parses an HTML file containing draft information and returns a list of player data.
 
     Returns:
         List: A list of dictionaries, where each dictionary represents a player and contains the following keys:
-            - player_html (str): The HTML link to the player's profile.
             - athletic_skill (str): The player's athletic skill (currently set to None).
             - accuracy (str): The player's accuracy (currently set to None).
             - defence (str): The player's defence (currently set to None).
@@ -285,13 +310,14 @@ def list_draft() -> List:
     try:
         for i in range(40):
             player_row = {}
-            player_row["player_html"] = player_html[i]
-            # TODO: obtain ability of player
+            html_text = download_html(TEXT.BASE_URL + player_html[i])
+
+            abilities = match_abilities(html_text)
             
-            player_row["athletic_skill"] = None
-            player_row["accuracy"] = None
-            player_row["defence"] = None
-            player_row["offence"] = None
+            player_row["athletic_skill"] = abilities.get("athletic_skill")
+            player_row["accuracy"] = abilities.get("accuracy")
+            player_row["defence"] = abilities.get("defence")
+            player_row["offence"] = abilities.get("offence")
 
             player_row["name"] = name[i].text
             player_row["type"] = player_type[i].text.replace("\n", "").replace("(", "").replace(")", "")

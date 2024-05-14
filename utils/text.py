@@ -1,8 +1,10 @@
 # 
 DB_PATH = "./var/db/db.sqlite"
 
+BASE_URL = "www.basketpulse.com"
+
 TEST_GAME_ID = "18447944"
-SEASON = "S98"
+SEASON = "S99"
 INPUT = f"./var/{TEST_GAME_ID}"
 
 ################################
@@ -35,4 +37,4 @@ SHOT_CHANCE_MAPPING = {
 # salary
 MIN_GAME_PLAY = 25
 MIN_GAME_MINUTE = 15
-SALARY_WEIGHT = [0, 0, 0, 0, 18500, 12000]
+SALARY_WEIGHT = [0, 0, 0, 35000, 20000, 12000]
