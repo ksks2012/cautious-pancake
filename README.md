@@ -30,15 +30,15 @@ pip install .; clear; python .\cmd\process_draft.py
 #### Print
 
 ```
-pip install .; clear; python -m unittest .\test\print_db_processor.py
+pip install .; clear; python .\print_code\print_db_processor.py
 ```
 
 ```
-pip install .; clear; python -m unittest .\test\print_db_routine.py
+pip install .; clear; python .\print_code\print_db_routine.py
 ```
 
 ```
-pip install .; clear; python -m unittest .\test\print_html_parser.py
+pip install .; clear; python .\print_code\print_html_parser.py
 ```
 
 #### Test
