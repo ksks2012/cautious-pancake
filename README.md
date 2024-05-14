@@ -27,10 +27,24 @@ pip install .; clear; python .\cmd\salary_value.py
 pip install .; clear; python .\cmd\process_draft.py
 ```
 
+#### Print
+
+```
+pip install .; clear; python -m unittest .\test\print_db_processor.py
+```
+
+```
+pip install .; clear; python -m unittest .\test\print_db_routine.py
+```
+
+```
+pip install .; clear; python -m unittest .\test\print_html_parser.py
+```
+
 #### Test
 
 ```
-pip install .; clear; python .\test_code\test_html_parser.py
+pip install .; clear; python -m unittest .\test\test_html_parser.py
 ```
 
 ### Record
