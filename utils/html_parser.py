@@ -239,6 +239,27 @@ def list_salary() -> List:
     return table_reader(response)
 
 def list_draft() -> List:
+    """
+    Parses an HTML file containing draft information and returns a list of player data.
+
+    Returns:
+        List: A list of dictionaries, where each dictionary represents a player and contains the following keys:
+            - player_html (str): The HTML link to the player's profile.
+            - athletic_skill (str): The player's athletic skill (currently set to None).
+            - accuracy (str): The player's accuracy (currently set to None).
+            - defence (str): The player's defence (currently set to None).
+            - offence (str): The player's offence (currently set to None).
+            - name (str): The player's name.
+            - type (str): The player's type.
+            - position (str): The player's position.
+            - age (str): The player's age.
+            - height (str): The player's height.
+            - potential (str): The player's potential.
+            - cur_ability (str): The player's current ability.
+            - max_ability (str): The player's maximum ability.
+            - health (str): The player's health.
+            - salary (str): The player's salary.
+    """
     with open(f"./var/{TEXT.SEASON}-3.3-draft.html", "rb") as fr:
         response = fr.read()
 
@@ -246,7 +267,6 @@ def list_draft() -> List:
 
     try:
         # ID
-        # player_id = soup.find_all("div", {"class": "draftprospect-card__flag"})
         player_html = [i.find('a').get('href') for i in soup.find_all("div", {"class": "draftprospect-card__flag"})]
         
         # 9 rows * 40 players
@@ -267,6 +287,7 @@ def list_draft() -> List:
             player_row = {}
             player_row["player_html"] = player_html[i]
             # TODO: obtain ability of player
+            
             player_row["athletic_skill"] = None
             player_row["accuracy"] = None
             player_row["defence"] = None
