@@ -310,13 +310,6 @@ def list_draft() -> List:
     try:
         for i in range(40):
             player_row = {}
-            html_text = download_html(TEXT.BASE_URL + player_html[i])
-            abilities = match_abilities(html_text)
-            
-            player_row["athletic_skill"] = abilities.get("athletic_skill")
-            player_row["accuracy"] = abilities.get("accuracy")
-            player_row["defence"] = abilities.get("defence")
-            player_row["offence"] = abilities.get("offence")
 
             player_row["name"] = name[i].text
             player_row["type"] = player_type[i].text.replace("\n", "").replace("(", "").replace(")", "")
@@ -326,8 +319,20 @@ def list_draft() -> List:
             player_row["potential"] = player_data[i * 9 + 4].text
             player_row["cur_ability"] = player_data[i * 9 + 5].text
             player_row["max_ability"] = player_data[i * 9 + 6].text
+
+            html_text = download_html(TEXT.BASE_URL + player_html[i])
+            abilities = match_abilities(html_text)
+            
+            player_row["athletic_skill"] = abilities.get("athletic_skill")
+            player_row["accuracy"] = abilities.get("accuracy")
+            player_row["defence"] = abilities.get("defence")
+            player_row["offence"] = abilities.get("offence")
+
             player_row["health"] = player_data[i * 9 + 7].text.replace(" ", "")
             player_row["salary"] = player_data[i * 9 + 8].text
+
+            player_row["sorting_cur_ability"] = player_row["cur_ability"] * 0.1
+            player_row["sorting_max_ability"] = player_row["max_ability"] * 0.1
 
             player_list.append(player_row)
     except Exception as err:
