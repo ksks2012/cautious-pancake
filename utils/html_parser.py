@@ -241,10 +241,10 @@ def list_salary() -> List:
 
 def match_abilities(player_html_text: str) -> Mapping:
     abilities = {
-        'athletic_skill': 0,
-        'accuracy': 0,
-        'defence': 0,
-        'offence': 0
+        'athletic_skill': '0',
+        'accuracy': '0',
+        'defence': '0',
+        'offence': '0'
     }
 
     soup = BeautifulSoup(player_html_text, "html.parser")
