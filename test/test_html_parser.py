@@ -5,6 +5,58 @@ from utils import html_parser
 from utils.text import INPUT
 
 class TestListDraft(unittest.TestCase):
+    def test_match_abilities(self):
+        # Test case 1: Valid HTML with abilities
+        html_text = """
+        <html>
+            <body>
+                <span class="skill__count">0</span>
+                <span class="skill__count">1</span>
+                <span class="skill__count">2</span>
+                <span class="skill__count">3</span>
+                <span class="skill__count">4</span>
+            </body>
+        </html>
+        """
+        expected_result = {
+            'athletic_skill': '1',
+            'accuracy': '2',
+            'defence': '3',
+            'offence': '4'
+        }
+        result = html_parser.match_abilities(html_text)
+        self.assertEqual(result, expected_result)
+
+        # Test case 2: HTML without abilities
+        html_text = """
+        <html>
+            <body>
+                <span class="skill__count">0</span>
+                <span class="skill__count">1</span>
+            </body>
+        </html>
+        """
+        expected_result = {
+            'athletic_skill': '1',
+            'accuracy': '0',
+            'defence': '0',
+            'offence': '0'
+        }
+        result = html_parser.match_abilities(html_text)
+        self.assertEqual(result, expected_result)
+
+        # Test case 3: Empty HTML
+        html_text = ""
+        expected_result = {
+            'athletic_skill': '0',
+            'accuracy': '0',
+            'defence': '0',
+            'offence': '0'
+        }
+        result = html_parser.match_abilities(html_text)
+        self.assertEqual(result, expected_result)
+
+
     def test_list_draft(self):
         # Call the function
         result = html_parser.list_draft()
