@@ -59,6 +59,7 @@ def analysis_shots(player: dict) -> dict:
     pprint.pprint(player_shoots)
     return player_shoots
 
+# TODO: process new format
 def analysis_control(rows: List[str], ids: List[str]) -> dict:
     """
     Analyzes control data for each player during the game.
@@ -92,6 +93,7 @@ def analysis_control(rows: List[str], ids: List[str]) -> dict:
             defender_id = ids[ids_idx][2]
         except:
             pass
+
         if len(row) == 5:
             control = row[4].replace(' ', '')
             control = control.split(':', 1)
@@ -180,32 +182,47 @@ def list_game_table() -> (List, List):
         response = fr.read()
         
     soup = BeautifulSoup(response, "html.parser")
-    # print(soup.prettify())
 
-    # <caption class="pilkasDesineje">事件列表 </caption>
-    # soup.find("caption")
+    bs_set_home = soup.find_all("div", {"class": "match-play-by-play__events-item match-play-by-play__events-item--home"})
+    bs_set_away = soup.find_all("div", {"class": "match-play-by-play__events-item match-play-by-play__events-item--away"})
 
-    # <class 'bs4.element.Tag'>
-    table = soup.find(["table", "td"])
-    # print(table, len(table), type(table))
-    if table is None:
-        print("No table found in the HTML.")
-        return [], []
-
-    columns = [th.text.replace('\n', '') for th in table.find_all('th')]
-    # print(columns)
-
-    trs = table.find_all('tr')[1:]
     rows = list()
     ids = list()
-    for tr in trs:
-        ids.append([a.get('href', "").split('/')[-2] for a in tr.find_all('a')])
-        rows.append([td.text.replace('\n', '').replace('\r', '') for td in tr.find_all('td')])
-    # pprint.pprint(rows)
-    pprint.pprint(ids)
+    # <class 'bs4.element.ResultSet'>
+    columns = [td.find_all("span") for td in (bs_set_home + bs_set_away)]
+    for c in columns:
+        '''
+            standard mode
+                0: info
+                1: advantage info
+                2: quarter
+                3: minute
+                4: empty
+                5: empty
+                6: empty
+            shooting mode
+                0: shooting info
+                1: advantage info(shooting chance)
+                2: advantage info(player skill rate)
+                3: advantage info(shooting quality rate)
+                4: defender
+                5: quarter
+                6: minute
+                7: point
+                8: empty
+                9: empty
+            others: (fast break)
+        '''
+        # TODO: fast break
+        # TODO: filter
+        tmp = []
+        for r in c:
+            tmp.append(r.text)
+        rows.append(tmp)
 
     file_processor.write_json(f"{TEXT.INPUT}_table.json", rows)
-    file_processor.write_json(f"{TEXT.INPUT}_ids.json", ids)
+    # TODO: process player id
+    # file_processor.write_json(f"{TEXT.INPUT}_ids.json", ids)
 
     return rows, ids
 
