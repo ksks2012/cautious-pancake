@@ -18,6 +18,7 @@ dist/**
 # test_code/**
 .style.yapf
 
+var/**
 .credentials/**
 *.png
 *.log

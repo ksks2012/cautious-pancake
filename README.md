@@ -19,36 +19,36 @@ list_game_table() -> {INPUT}_player.json
 
 - Calculate salary value
     ```
-    pip install .; clear; python .\cmd\salary_value.py
+    pip install .; clear; python ./cmd/salary_value.py
     ```
 
 - Process draft page
     ```
-    pip install .; clear; python .\cmd\process_draft.py
+    pip install .; clear; python ./cmd/process_draft.py
     ```
 
 #### Print
 
 - DB processor
     ```
-    pip install .; clear; python .\print_code\print_db_processor.py
+    pip install .; clear; python ./print_code/print_db_processor.py
     ```
 
 - DB routine
     ```
-    pip install .; clear; python .\print_code\print_db_routine.py
+    pip install .; clear; python ./print_code/print_db_routine.py
     ```
 
 - HTML parser
     ```
-    pip install .; clear; python .\print_code\print_html_parser.py
+    pip install .; clear; python ./print_code/print_html_parser.py
     ```
 
 #### Test
 
 - HTML parser
     ```
-    pip install .; clear; python -m unittest .\test\test_html_parser.py
+    pip install .; clear; python -m unittest ./test/test_html_parser.py
     ```
 
 ### Record
