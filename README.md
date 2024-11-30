@@ -2,9 +2,7 @@
 
 Tags: Home
 
-# 目錄
-
-# 功能
+# Feature
 
 - game analysis
 - draft analysis

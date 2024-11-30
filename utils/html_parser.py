@@ -1,5 +1,6 @@
 import json
 import pprint
+import re
 from bs4 import BeautifulSoup
 from typing import List, Mapping
 
@@ -170,6 +171,11 @@ def analysis_control(rows: List[str], ids: List[str]) -> dict:
 
     return players
 
+def extract_player_id(url):
+    match = re.search(r"/Player/(\d+)/", url)
+    return match.group(1) if match else None
+
+
 def list_game_table() -> (List, List):
     """
     Extracts game data from an HTML file and returns rows and player IDs.
@@ -183,14 +189,17 @@ def list_game_table() -> (List, List):
         
     soup = BeautifulSoup(response, "html.parser")
 
-    bs_set_home = soup.find_all("div", {"class": "match-play-by-play__events-item match-play-by-play__events-item--home"})
-    bs_set_away = soup.find_all("div", {"class": "match-play-by-play__events-item match-play-by-play__events-item--away"})
+    bs_set_home = soup.find_all("div", {"class": "match-play-by-play__item-team-home"})
+    bs_set_away = soup.find_all("div", {"class": "match-play-by-play__item-team-away"})
 
-    rows = list()
-    ids = list()
-    # <class 'bs4.element.ResultSet'>
     columns = [td.find_all("span") for td in (bs_set_home + bs_set_away)]
-    for c in columns:
+
+    with open(f"{TEXT.INPUT}_columns.txt", "w") as fw:
+        for column in columns:
+            fw.write(str(column) + "\n")
+
+    data = []
+    for element in columns:
         '''
             standard mode
                 0: info
@@ -213,18 +222,53 @@ def list_game_table() -> (List, List):
                 9: empty
             others: (fast break)
         '''
-        # TODO: fast break
-        # TODO: filter
-        tmp = []
-        for r in c:
-            tmp.append(r.text)
-        rows.append(tmp)
+        element = element[0]
 
-    file_processor.write_json(f"{TEXT.INPUT}_table.json", rows)
-    # TODO: process player id
-    # file_processor.write_json(f"{TEXT.INPUT}_ids.json", ids)
+        # First, check if the element contains "shot"
+        if "shot" in element.text:
+            shot_type = element.text.split(":")[0].strip()
+            
+            # Extract offensive player
+            offensive_player = element.find("a")
+            offensive_name = offensive_player.text.strip()
+            offensive_title = offensive_player['title']
+            offensive_id = extract_player_id(offensive_player['href'])  # Extract offensive player's ID
+            
+            # Extract details from all child elements
+            details = element.find_all("span", class_="chronology_add_info")
+            info = {
+                "shot_type": shot_type,
+                "offensive_player": offensive_name,
+                "offensive_full_name": offensive_title,
+                "offensive_id": offensive_id  # Store offensive player's ID
+            }
 
-    return rows, ids
+            for detail in details:
+                text = detail.text.strip()
+                if "Players skills' ratio" in text:
+                    info["skills_ratio"] = text.split(":")[1].strip()
+                elif "Shot quality ratio" in text:
+                    info["shot_quality"] = text.split(":")[1].strip()
+                elif "Defender" in text:
+                    defender = detail.find("a")
+                    if defender:
+                        defender_name = defender.text.strip()
+                        defender_id = extract_player_id(defender['href'])  # Extract defender's ID
+                        info["defender"] = {
+                            "name": defender_name,
+                            "id": defender_id
+                        }
+
+            data.append(info)
+
+        # Print results
+        for entry in data:
+            print(entry)
+
+        file_processor.write_json(f"{TEXT.INPUT}_shot.json", data)
+
+
+    return [], []
 
 def table_reader(response):
     soup = BeautifulSoup(response, "html.parser")
