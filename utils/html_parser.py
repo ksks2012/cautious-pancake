@@ -199,33 +199,26 @@ def list_game_table() -> (List, List):
             fw.write(str(column) + "\n")
 
     data = []
+    shot_type_set = set()
     for element in columns:
-        '''
-            standard mode
-                0: info
-                1: advantage info
-                2: quarter
-                3: minute
-                4: empty
-                5: empty
-                6: empty
-            shooting mode
-                0: shooting info
-                1: advantage info(shooting chance)
-                2: advantage info(player skill rate)
-                3: advantage info(shooting quality rate)
-                4: defender
-                5: quarter
-                6: minute
-                7: point
-                8: empty
-                9: empty
-            others: (fast break)
-        '''
+        """
+            Extracts shot data from the HTML file.
+            FIELD DESCRIPTION:
+                SHOT_TYPE: The type of shot (e.g., 2PT shot, 3PT shot).
+                OFFENSIVE_PLAYER: The name of the offensive player.
+                OFFENSIVE_FULL_NAME: The full name of the offensive player.
+                OFFENSIVE_ID: The ID of the offensive player.
+                SITUATION: The situation of the shot.
+                SKILLS_RATIO: The players' skills ratio.
+                SHOT_QUALITY: The shot quality ratio.
+                DEFENDER: The defender
+            HTML EXAMPLE:
+                ${SHOT_TYPE} (Action): ${PLAYER_NAME} (SITUATION: ${SITUATION}, SKILLS_RATIO: ${SKILLS_RATIO}, SHOT_QUALITY: ${SHOT_QUALITY}, DEFENDER: ${DEFENDER})
+        """
         element = element[0]
 
         # First, check if the element contains "shot"
-        if "shot" in element.text:
+        if TEXT.SHOT in element.text:
             shot_type = element.text.split(":")[0].strip()
             
             # Extract offensive player
@@ -236,6 +229,7 @@ def list_game_table() -> (List, List):
             
             # Extract details from all child elements
             details = element.find_all("span", class_="chronology_add_info")
+            shot_type_set.add(shot_type)
             info = {
                 "shot_type": shot_type,
                 "offensive_player": offensive_name,
@@ -245,11 +239,13 @@ def list_game_table() -> (List, List):
 
             for detail in details:
                 text = detail.text.strip()
-                if "Players skills' ratio" in text:
+                if TEXT.SITUATION in text:
+                    info["situation"] = text
+                elif TEXT.SKILLS_RATIO in text:
                     info["skills_ratio"] = text.split(":")[1].strip()
-                elif "Shot quality ratio" in text:
+                elif TEXT.SHOT_QUALITY in text:
                     info["shot_quality"] = text.split(":")[1].strip()
-                elif "Defender" in text:
+                elif TEXT.DEFENDER in text:
                     defender = detail.find("a")
                     if defender:
                         defender_name = defender.text.strip()
@@ -267,7 +263,7 @@ def list_game_table() -> (List, List):
 
         file_processor.write_json(f"{TEXT.INPUT}_shot.json", data)
 
-
+    pprint.pprint(shot_type_set)
     return [], []
 
 def table_reader(response):

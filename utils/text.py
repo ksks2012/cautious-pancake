@@ -3,7 +3,7 @@ DB_PATH = "./var/db/db.sqlite"
 
 BASE_URL = "https://www.basketpulse.com"
 
-TEST_GAME_ID = "18447944"
+TEST_GAME_ID = "19574448"
 SEASON = "S101"
 INPUT = f"./var/{TEST_GAME_ID}"
 
@@ -12,7 +12,9 @@ STARTING = "先發"
 BENCH = "替補"
 
 # Scored
-SHOT = "投籃"
+SHOT = "shot"
+TWO_POINT_SHOT = "2PT shot"
+THREE_POINT_SHOT = "3PT shot"
 DUNK = "灌籃"
 SUCCESS_FAST_BREAK = "成功的快攻"
 FAIL_FAST_BREAK = "快攻2分球投籃沒中"
@@ -25,7 +27,20 @@ CLOSE_RANGE = "近距離"
 MID_RANGE = "中距離"
 
 # title
-SHOT_QUALITY = ['chance', 'skill_rate', 'quality_rate', 'defender']
+# TODO: i10n
+SITUATION = "situation"
+SITUATION_MAPPING = {
+    "Excellent situation": 5,
+    "Good situation": 4,
+    "Average situation": 3,
+    "Bad situation": 2,
+    "Very bad situation": 1,
+}
+SKILLS_RATIO = "Players skills' ratio"
+SHOT_QUALITY = "Shot quality ratio"
+DEFENDER = "Defender"
+
+# SHOT_QUALITY = ['chance', 'skill_rate', 'quality_rate', 'defender']
 SHOT_CHANCE_MAPPING = {
     "極佳機會": 5,
     "良好機會": 4,
