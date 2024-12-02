@@ -11,7 +11,9 @@ setup(name="bpsupport",
 		install_requires=[
 			"PyYaml >= 6.0",
             "requests >= 2.21.0",
-            "beautifulsoup4 >= 4.12.2"
+            "beautifulsoup4 >= 4.12.2",
+            "SQLAlchemy >= 2.0.36",
+            "alembic >= 1.14.0",
 		],
 		entry_points={
 				'console_scripts': [
