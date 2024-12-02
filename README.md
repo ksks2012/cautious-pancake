@@ -12,7 +12,7 @@ Tags: Home
 ### Command 
 
 ```
-list_game_table() -> {INPUT}_player.json
+list_game_table() -> {INPUT}_shot.json
 ```
 
 - Calculate salary value

@@ -171,12 +171,51 @@ def analysis_control(rows: List[str], ids: List[str]) -> dict:
 
     return players
 
+def analysis_shots_class(rows: List[str]) -> Mapping:
+    """
+    Analyzes shooting data for each player and organizes it into a structured dictionary.
+
+    Args:
+    - rows (List[str]): List of strings representing rows of game data.
+
+    Returns:
+    - Mapping
+    """
+    sohts_class = {
+        "inside_shooting": 0,
+        "midrange_shooting": 0,
+        "three_shooting": 0,
+        "fast_break": 0,
+        "dunk": 0,
+    }
+    print("len(rows)", len(rows))
+    for row in rows:
+        # print(row)
+        shot_type = row["shot_type"]
+        print(shot_type)
+        
+        if TEXT.DUNK in shot_type:
+            sohts_class["dunk"] += 1
+        elif TEXT.FAST_BREAK in shot_type:
+            sohts_class["fast_break"] += 1
+        elif TEXT.CLOSE_RANGE in shot_type:
+            sohts_class["inside_shooting"] += 1
+        elif TEXT.MID_RANGE in shot_type:
+            sohts_class["midrange_shooting"] += 1
+        elif TEXT.THREE_POINT_SHOT in shot_type:
+            sohts_class["three_shooting"] += 1
+        
+
+    pprint.pprint(sohts_class)
+
+    return sohts_class
+
 def extract_player_id(url):
     match = re.search(r"/Player/(\d+)/", url)
     return match.group(1) if match else None
 
 
-def list_game_table() -> (List, List):
+def list_game_table() -> Mapping:
     """
     Extracts game data from an HTML file and returns rows and player IDs.
 
@@ -218,9 +257,10 @@ def list_game_table() -> (List, List):
         element = element[0]
 
         # First, check if the element contains "shot"
-        if TEXT.SHOT in element.text:
-            shot_type = element.text.split(":")[0].strip()
-            
+        # TODO: TEXT.FAST_BREAK_TURN_OVER
+        if TEXT.DEFENDER in element.text:
+            shot_type = element.text.split(":")[0].strip().lower()
+
             # Extract offensive player
             offensive_player = element.find("a")
             offensive_name = offensive_player.text.strip()
@@ -229,7 +269,6 @@ def list_game_table() -> (List, List):
             
             # Extract details from all child elements
             details = element.find_all("span", class_="chronology_add_info")
-            shot_type_set.add(shot_type)
             info = {
                 "shot_type": shot_type,
                 "offensive_player": offensive_name,
@@ -254,12 +293,9 @@ def list_game_table() -> (List, List):
                             "name": defender_name,
                             "id": defender_id
                         }
-
-            data.append(info)
-
-        # Print results
-        for entry in data:
-            print(entry)
+            if "skills_ratio" in info and "shot_quality" in info:
+                data.append(info)
+                shot_type_set.add(shot_type)                
 
         file_processor.write_json(f"{TEXT.INPUT}_shot.json", data)
 
@@ -398,19 +434,19 @@ def list_draft() -> List:
     return player_list
 
 def main():
-    rows, ids = list_game_table()
-    players = analysis_control(rows, ids)
-    file_processor.write_json(f"{TEXT.INPUT}_player.json", players)
-    player_data = file_processor.read_json(f"{TEXT.INPUT}_player.json")
-    player_shoots = analysis_shots(player_data)
-    file_processor.write_json(f"{TEXT.INPUT}_player_shoots.json", player_shoots)
+    rows = list_game_table()
+    # players = analysis_control(rows, ids)
+    # file_processor.write_json(f"{TEXT.INPUT}_player.json", players)
+    # player_data = file_processor.read_json(f"{TEXT.INPUT}_player.json")
+    # player_shoots = analysis_shots(player_data)
+    # file_processor.write_json(f"{TEXT.INPUT}_player_shoots.json", player_shoots)
 
     # Save to DB
     sqlite_instance = SqliteInstance()
     sqlite_instance.connect(TEXT.DB_PATH)
-    db_rows = player_shooting_data_to_row(players)
-    for row in db_rows:
-        sqlite_instance.insert_data("ShootData", row)
+    # db_rows = player_shooting_data_to_row(players)
+    # for row in db_rows:
+    #     sqlite_instance.insert_data("ShootData", row)
 
 if __name__ == '__main__':
     main()

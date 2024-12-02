@@ -10,10 +10,13 @@ def print_analysis_control():
     
     html_parser.analysis_control(rows, ids)
 
+def analysis_shots_class():
+    rows = file_processor.read_json(f"{INPUT}_shot.json")
+    
+    html_parser.analysis_shots_class(rows)
+
 def print_list_game_table():
-    rows, ids = html_parser.list_game_table()
-    pprint.pprint(rows)
-    pprint.pprint(ids)
+    _ = html_parser.list_game_table()
 
 def print_list_improvement_jumps():
     rows = html_parser.list_improvement_jumps()
@@ -36,8 +39,9 @@ def print_match_abilities():
 
 if __name__ == '__main__':
     print_list_game_table()
-    print_analysis_control()
-    print_list_improvement_jumps()
-    print_list_salary()
-    print_list_draft()
-    print_match_abilities()
+    analysis_shots_class()
+    # print_analysis_control()
+    # print_list_improvement_jumps()
+    # print_list_salary()
+    # print_list_draft()
+    # print_match_abilities()
