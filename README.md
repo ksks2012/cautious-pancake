@@ -49,6 +49,28 @@ list_game_table() -> {INPUT}_shot.json
     pip install .; clear; python -m unittest ./test/test_html_parser.py
     ```
 
+ ### Alembic
+
+-  Revision
+  ```
+  alembic revision --autogenerate -m <Message>
+  ```
+
+- Migrate
+  ```
+  alembic upgrade head
+  ```
+
+- Downgrade
+  ```
+  alembic downgrade <revision_id>
+  ```
+
+- Info
+  ```
+  alembic history
+  ```
+
 ### Record
 
 #### Shotting
