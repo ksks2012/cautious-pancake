@@ -217,7 +217,7 @@ def extract_team_id(url):
     return match.group(1) if match else None
 
 
-def list_game_table() -> Mapping:
+def list_game_table(input_file_name=None) -> Mapping:
     """
     Extracts game data from an HTML file and returns rows and player IDs.
 
@@ -225,9 +225,12 @@ def list_game_table() -> Mapping:
     - List: Rows of game data.
     - List: Player IDs.
     """
-    with open(f"{TEXT.INPUT}.html", "rb") as fr:
+    if input_file_name is None:
+        input_file_name = TEXT.INPUT
+    
+    with open(f"{input_file_name}.html", "rb") as fr:
         response = fr.read()
-        
+    
     soup = BeautifulSoup(response, "html.parser")
 
     bs_set_home = soup.find_all("div", {"class": "match-play-by-play__item-team-home"})
@@ -245,7 +248,7 @@ def list_game_table() -> Mapping:
     
     columns = home_columns + away_columns
 
-    with open(f"{TEXT.INPUT}_columns.txt", "w") as fw:
+    with open(f"{input_file_name}_columns.txt", "w") as fw:
         for column in columns:
             fw.write(str(column) + "\n")
 
@@ -254,7 +257,7 @@ def list_game_table() -> Mapping:
 
     data = home_team_data + away_team_data
 
-    file_processor.write_json(f"{TEXT.INPUT}_shot.json", data)
+    file_processor.write_json(f"{input_file_name}_shot.json", data)
 
     return data
 
