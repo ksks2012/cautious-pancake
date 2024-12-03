@@ -1,5 +1,7 @@
 from typing import List, Mapping
 
+from internal.dao.shot_data import ShotData
+
 import utils.text as TEXT
 
 def player_shooting_data_to_row(players: Mapping) -> List:
@@ -30,3 +32,14 @@ def player_shooting_data_to_row(players: Mapping) -> List:
             db_rows.append(tmp)
 
     return db_rows
+
+def sequence_shot_data(shot_data: List) -> List:
+    """
+        sequence shot data for DB
+    """
+    rows = []
+    for data in shot_data:
+        tmp = ShotData(data)
+        rows.append(tmp)
+
+    return rows

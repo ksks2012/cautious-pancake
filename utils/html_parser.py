@@ -8,8 +8,9 @@ import utils.text as TEXT
 
 from data_processor.html_downloader import download_html
 from data_processor.middle import process_game_row_data
+from data_processor.sequence import sequence_shot_data
 from db_routine.sqlite import SqliteInstance
-from internal.dao.shot_data import ShotData
+from internal.dao.dbroutine import DBRoutine
 from utils import file_processor
 
 def analysis_shots(player: dict) -> dict:
@@ -254,7 +255,7 @@ def list_game_table() -> Mapping:
     data = home_team_data + away_team_data
 
     file_processor.write_json(f"{TEXT.INPUT}_shot.json", data)
-    
+
     return data
 
 def table_reader(response):
@@ -389,19 +390,14 @@ def list_draft() -> List:
     return player_list
 
 def main():
-    rows = list_game_table()
-    # players = analysis_control(rows, ids)
-    # file_processor.write_json(f"{TEXT.INPUT}_player.json", players)
-    # player_data = file_processor.read_json(f"{TEXT.INPUT}_player.json")
-    # player_shoots = analysis_shots(player_data)
-    # file_processor.write_json(f"{TEXT.INPUT}_player_shoots.json", player_shoots)
+    shot_data = list_game_table()
+    shot_data_rows = sequence_shot_data(shot_data)
 
     # Save to DB
-    sqlite_instance = SqliteInstance()
-    sqlite_instance.connect(TEXT.DB_PATH)
-    # db_rows = player_shooting_data_to_row(players)
-    # for row in db_rows:
-    #     sqlite_instance.insert_data("ShootData", row)
+    config = file_processor.read_ini("./alembic.ini")
+    db_routine = DBRoutine(config["alembic"]["sqlalchemy.url"])
+    db_routine.insert_shot_data_list(shot_data_rows)
+
 
 if __name__ == '__main__':
     main()

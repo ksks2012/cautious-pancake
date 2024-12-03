@@ -32,6 +32,36 @@ class DBRoutine:
             print(e)
             return
     
+    def get_session(self) -> Session:
+        return self.session_local()
+    
+    def close_connection(self) -> None:
+        self.connection.close()
+        print("SQLite database connection closed.")
+
+    def insert_shot_data(self, shot_data: ShotData) -> None:
+        session = self.get_session()
+        try:
+            session.add(shot_data)
+            session.commit()
+        except SQLAlchemyError as e:
+            session.rollback()
+            print(e)
+        finally:
+            session.close()
+
+    def insert_shot_data_list(self, shot_data_list: list) -> None:
+        session = self.get_session()
+        try:
+            for shot_data in shot_data_list:
+                session.add(shot_data)
+            session.commit()
+        except SQLAlchemyError as e:
+            session.rollback()
+            print(e)
+        finally:
+            session.close()
+
 # Create the table
 if __name__ == "__main__":
     config = read_ini("./alembic.ini")

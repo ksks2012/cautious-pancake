@@ -39,7 +39,7 @@ def print_match_abilities():
 
 if __name__ == '__main__':
     print_list_game_table()
-    analysis_shots_class()
+    # analysis_shots_class()
     # print_analysis_control()
     # print_list_improvement_jumps()
     # print_list_salary()
