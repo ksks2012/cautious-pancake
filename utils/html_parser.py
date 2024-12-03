@@ -6,9 +6,10 @@ from typing import List, Mapping
 
 import utils.text as TEXT
 
-from data_processor.sequence import player_shooting_data_to_row
 from data_processor.html_downloader import download_html
+from data_processor.middle import process_game_row_data
 from db_routine.sqlite import SqliteInstance
+from internal.dao.shot_data import ShotData
 from utils import file_processor
 
 def analysis_shots(player: dict) -> dict:
@@ -210,8 +211,8 @@ def analysis_shots_class(rows: List[str]) -> Mapping:
 
     return sohts_class
 
-def extract_player_id(url):
-    match = re.search(r"/Player/(\d+)/", url)
+def extract_team_id(url):
+    match = re.search(r"/Team/(\d+)/", url)
     return match.group(1) if match else None
 
 
@@ -231,76 +232,30 @@ def list_game_table() -> Mapping:
     bs_set_home = soup.find_all("div", {"class": "match-play-by-play__item-team-home"})
     bs_set_away = soup.find_all("div", {"class": "match-play-by-play__item-team-away"})
 
-    columns = [td.find_all("span") for td in (bs_set_home + bs_set_away)]
+
+    home_team_id = extract_team_id(bs_set_home[0].find_all("a")[1]["href"])
+    home_team_name = bs_set_home[0].find_all("a")[1].img['title']
+    away_team_id = extract_team_id(bs_set_away[0].find("a")["href"])
+    away_team_name = bs_set_away[0].find("a").img['title']
+    print(home_team_id, home_team_name, away_team_id, away_team_name)
+
+    home_columns = [td.find_all("span") for td in bs_set_home]
+    away_columns = [td.find_all("span") for td in bs_set_away]
+    
+    columns = home_columns + away_columns
 
     with open(f"{TEXT.INPUT}_columns.txt", "w") as fw:
         for column in columns:
             fw.write(str(column) + "\n")
 
-    data = []
-    shot_type_set = set()
-    for element in columns:
-        """
-            Extracts shot data from the HTML file.
-            FIELD DESCRIPTION:
-                SHOT_TYPE: The type of shot (e.g., 2PT shot, 3PT shot).
-                OFFENSIVE_PLAYER: The name of the offensive player.
-                OFFENSIVE_FULL_NAME: The full name of the offensive player.
-                OFFENSIVE_ID: The ID of the offensive player.
-                SITUATION: The situation of the shot.
-                SKILLS_RATIO: The players' skills ratio.
-                SHOT_QUALITY: The shot quality ratio.
-                DEFENDER: The defender
-            HTML EXAMPLE:
-                ${SHOT_TYPE} (Action): ${PLAYER_NAME} (SITUATION: ${SITUATION}, SKILLS_RATIO: ${SKILLS_RATIO}, SHOT_QUALITY: ${SHOT_QUALITY}, DEFENDER: ${DEFENDER})
-        """
-        element = element[0]
+    home_team_data = process_game_row_data(home_columns, TEXT.TEST_GAME_ID, home_team_id, home_team_name)
+    away_team_data = process_game_row_data(away_columns, TEXT.TEST_GAME_ID, away_team_id, away_team_name)
 
-        # First, check if the element contains "shot"
-        # TODO: TEXT.FAST_BREAK_TURN_OVER
-        if TEXT.DEFENDER in element.text:
-            shot_type = element.text.split(":")[0].strip().lower()
+    data = home_team_data + away_team_data
 
-            # Extract offensive player
-            offensive_player = element.find("a")
-            offensive_name = offensive_player.text.strip()
-            offensive_title = offensive_player['title']
-            offensive_id = extract_player_id(offensive_player['href'])  # Extract offensive player's ID
-            
-            # Extract details from all child elements
-            details = element.find_all("span", class_="chronology_add_info")
-            info = {
-                "shot_type": shot_type,
-                "offensive_player": offensive_name,
-                "offensive_full_name": offensive_title,
-                "offensive_id": offensive_id  # Store offensive player's ID
-            }
-
-            for detail in details:
-                text = detail.text.strip()
-                if TEXT.SITUATION in text:
-                    info["situation"] = text
-                elif TEXT.SKILLS_RATIO in text:
-                    info["skills_ratio"] = text.split(":")[1].strip()
-                elif TEXT.SHOT_QUALITY in text:
-                    info["shot_quality"] = text.split(":")[1].strip()
-                elif TEXT.DEFENDER in text:
-                    defender = detail.find("a")
-                    if defender:
-                        defender_name = defender.text.strip()
-                        defender_id = extract_player_id(defender['href'])  # Extract defender's ID
-                        info["defender"] = {
-                            "name": defender_name,
-                            "id": defender_id
-                        }
-            if "skills_ratio" in info and "shot_quality" in info:
-                data.append(info)
-                shot_type_set.add(shot_type)                
-
-        file_processor.write_json(f"{TEXT.INPUT}_shot.json", data)
-
-    pprint.pprint(shot_type_set)
-    return [], []
+    file_processor.write_json(f"{TEXT.INPUT}_shot.json", data)
+    
+    return data
 
 def table_reader(response):
     soup = BeautifulSoup(response, "html.parser")

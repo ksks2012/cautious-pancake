@@ -26,3 +26,15 @@ elif config["locales"] == "zh-tw":
 
 FAST_BREAK_LIST = [SUCCESS_FAST_BREAK, FAIL_FAST_BREAK]
 SCORED_LIST = [SHOT, DUNK, SUCCESS_FAST_BREAK, FAIL_FAST_BREAK, THREE_POINT_SHOT, OTHER_COURT]
+
+################################
+# Class of shot
+################################
+
+DUNK_TYPE = "D"
+FAST_BREAK_TYPE = "FB"
+CLOSE_RANGE_TYPE = "CR"
+MID_RANGE_TYPE = "MR"
+THREE_POINT_SHOT_TYPE = "3S"
+
+################################
