@@ -1,13 +1,18 @@
+import os
+
 from data_processor.sequence import sequence_shot_data
 from internal.dao.dbroutine import DBRoutine
 from utils import file_processor
 from utils.html_parser import list_game_table
-import os
 
-def main():
-    file_name = "{TEXT.INPUT}_shot.json"
+import utils.text as TEXT
+
+def main(input=None):
+    if input is None:
+        input = TEXT.INPUT
+    file_name = f"{input}_shot.json"
     if not os.path.exists(file_name):
-        shot_data = list_game_table()
+        shot_data = list_game_table(input)
     else:
         shot_data = file_processor.read_json(file_name)
     
@@ -21,4 +26,6 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    html_input = file_processor.read_yaml("./etc/settings.yml")["html_input"]
+    for html_file in html_input:
+        main(html_file)
