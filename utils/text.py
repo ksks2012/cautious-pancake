@@ -36,5 +36,7 @@ FAST_BREAK_TYPE = "FB"
 CLOSE_RANGE_TYPE = "CR"
 MID_RANGE_TYPE = "MR"
 THREE_POINT_SHOT_TYPE = "3S"
+COURT_TYPE = "C"
+UNKNOWN_TYPE = "U"
 
 ################################
