@@ -148,6 +148,26 @@ list_game_table() -> {INPUT}_shot.json
     - skill_rate
     - teams
 
+# Table
+
+## ShotData Table Schema
+
+| Column Name     | Type        | Constraints                                  | Default Value     | Description                                         |
+|------------------|-------------|----------------------------------------------|-------------------|-----------------------------------------------------|
+| `id`            | `String(36)`| Primary Key, Not Null                       | `uuid.uuid4()`    | Unique identifier for each shot entry              |
+| `game_id`       | `String`    | Not Null                                    | None              | Identifier of the game where the shot occurred      |
+| `team_id`       | `String`    | Not Null                                    | None              | Identifier of the team that attempted the shot      |
+| `team_name`     | `String`    | Not Null                                    | None              | Name of the team that attempted the shot            |
+| `player_id`     | `String`    | Not Null                                    | None              | Identifier of the player who attempted the shot     |
+| `player_name`   | `String`    | Not Null                                    | None              | Name of the player who attempted the shot           |
+| `shot_class`    | `String`    | Not Null                                    | None              | Classification of the shot (e.g., 3PT, layup)       |
+| `shot_chance`   | `Integer`   | Not Null                                    | None              | Probability of the shot being successful            |
+| `skills_ratio`  | `Integer`   | Not Null                                    | None              | Ratio representing the player's skills for the shot |
+| `shot_quality`  | `Integer`   | Not Null                                    | None              | Quality assessment of the shot attempt              |
+| `defender_id`   | `String`    | Not Null                                    | None              | Identifier of the player defending the shot         |
+| `defender_name` | `String`    | Not Null                                    | None              | Name of the player defending the shot               |
+
+
 # TODO:
 
 - Logger
