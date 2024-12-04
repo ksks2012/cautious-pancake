@@ -227,7 +227,7 @@ def list_game_table(input_file_name=None) -> Mapping:
     """
     if input_file_name is None:
         input_file_name = TEXT.INPUT
-    
+
     with open(f"{input_file_name}.html", "rb") as fr:
         response = fr.read()
     
@@ -252,8 +252,8 @@ def list_game_table(input_file_name=None) -> Mapping:
         for column in columns:
             fw.write(str(column) + "\n")
 
-    home_team_data = process_game_row_data(home_columns, TEXT.TEST_GAME_ID, home_team_id, home_team_name)
-    away_team_data = process_game_row_data(away_columns, TEXT.TEST_GAME_ID, away_team_id, away_team_name)
+    home_team_data = process_game_row_data(home_columns, input_file_name.split("/")[-1], home_team_id, home_team_name)
+    away_team_data = process_game_row_data(away_columns, input_file_name.split("/")[-1], away_team_id, away_team_name)
 
     data = home_team_data + away_team_data
 
