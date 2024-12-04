@@ -7,10 +7,11 @@ from utils.html_parser import list_game_table
 
 import utils.text as TEXT
 
-def main(input=None):
+def run(input=None):
     if input is None:
         input = TEXT.INPUT
     file_name = f"{input}_shot.json"
+    print("file_name: ", file_name)
     if not os.path.exists(file_name):
         shot_data = list_game_table(input)
     else:
@@ -28,4 +29,4 @@ def main(input=None):
 if __name__ == '__main__':
     html_input = file_processor.read_yaml("./etc/settings.yml")["html_input"]
     for html_file in html_input:
-        main(html_file)
+        run(html_file)

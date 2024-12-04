@@ -62,6 +62,19 @@ class DBRoutine:
         finally:
             session.close()
 
+class DBRoutineReader(DBRoutine):
+    def __init__(self, DATABASE_URL: str):
+        super().__init__(DATABASE_URL)
+
+    def get_team_shot_data(self, team: str) -> list:
+        session = self.get_session()
+        try:
+            return session.query(ShotData).filter(ShotData.team_id == team).all()
+        except SQLAlchemyError as e:
+            print(e)
+        finally:
+            session.close()
+
 # Create the table
 if __name__ == "__main__":
     config = read_ini("./alembic.ini")

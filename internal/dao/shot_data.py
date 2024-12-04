@@ -56,3 +56,10 @@ class ShotData(Base):
             f"  defender_name={self.defender_name}\n"
             f")"
         )
+    
+    def to_dict(self):
+        result = {}
+        for k, v in self.__dict__.items():
+            if not k.startswith("_"):
+                result[k] = v
+        return result

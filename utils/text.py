@@ -39,4 +39,14 @@ THREE_POINT_SHOT_TYPE = "3S"
 COURT_TYPE = "C"
 UNKNOWN_TYPE = "U"
 
+SHOT_CLASS_MAPPING = {
+    "D": "Dunk",
+    "FB": "Fast Break",
+    "CR": "Close Range",
+    "MR": "Mid Range",
+    "3S": "3-Point Shot",
+    "C": "Other Court",
+    "U": "Unknown"
+}
+
 ################################
