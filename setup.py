@@ -14,6 +14,9 @@ setup(name="bpsupport",
             "beautifulsoup4 >= 4.12.2",
             "SQLAlchemy >= 2.0.36",
             "alembic >= 1.14.0",
+            "pandas >= 2.2.3",
+            "matplotlib >= 3.9.3",
+            "seaborn >= 0.13.2",
 		],
 		entry_points={
 				'console_scripts': [
