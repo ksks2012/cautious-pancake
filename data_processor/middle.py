@@ -15,7 +15,7 @@ def mapping_shot_class(shot_type: str) -> str:
         return TEXT.MID_RANGE_TYPE
     elif TEXT.THREE_POINT_SHOT in shot_type:
         return TEXT.THREE_POINT_SHOT_TYPE
-    elif TEXT.OTHER_COURT in shot_type:
+    elif TEXT.OTHER_COURT in shot_type or TEXT.BUZZER in shot_type:
         return TEXT.COURT_TYPE
     else:
         print("unknown shot type", shot_type)

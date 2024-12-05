@@ -11,6 +11,7 @@ CLOSE_RANGE = "close range"
 MID_RANGE = "mid-range"
 THREE_POINT_SHOT = "3pt shot"
 OTHER_COURT = "court"
+BUZZER = "buzzer"
 
 SUCCESS_FAST_BREAK = ""
 FAIL_FAST_BREAK = ""
