@@ -4,7 +4,7 @@ DB_PATH = "./var/db/db.sqlite"
 BASE_URL = "https://www.basketpulse.com"
 
 TEST_GAME_ID = "19574448"
-SEASON = "S101"
+SEASON = "S102"
 INPUT = f"./var/{TEST_GAME_ID}"
 
 ################################
