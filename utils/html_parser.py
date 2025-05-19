@@ -316,7 +316,7 @@ def match_abilities(player_html_text: str) -> Mapping:
 
     return abilities
 
-def list_draft() -> List:
+def list_draft(draft_name: str) -> List:
     """
     Parses an HTML file containing draft information and returns a list of player data.
 
@@ -337,7 +337,7 @@ def list_draft() -> List:
             - health (str): The player's health.
             - salary (str): The player's salary.
     """
-    with open(f"./var/{TEXT.SEASON}-3.3-draft.html", "rb") as fr:
+    with open(f"./var/{draft_name}.html", "rb") as fr:
         response = fr.read()
 
     soup = BeautifulSoup(response, "html.parser")
